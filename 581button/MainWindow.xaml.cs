@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
+using System.IO;
 
 namespace TeemoHoverTest
 {
@@ -47,6 +48,8 @@ namespace TeemoHoverTest
         private readonly MediaPlayer mediaPlayer7 = new MediaPlayer();
         #endregion
 
+        private string dir = ((Directory.GetCurrentDirectory()).Replace(@"\bin\Debug", @"\")).Replace(@"\", @"\\");
+
         #endregion
 
         #region Assets
@@ -60,7 +63,7 @@ namespace TeemoHoverTest
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/shroomtest.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri(dir + "\\Images\\mushroom-transparent.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
@@ -77,7 +80,7 @@ namespace TeemoHoverTest
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/teemobutton.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri(dir + "\\Images\\teemobutton.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
@@ -94,7 +97,7 @@ namespace TeemoHoverTest
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/devilteemobutton.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri(dir + "\\Images\\devilteemobutton.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
@@ -114,7 +117,7 @@ namespace TeemoHoverTest
         /// <param name="filename">The file that contains the audio to play</param>
         private void PlayAudio(MediaPlayer mp, String filename)
         {
-            mp.Open(new System.Uri("C:\\Users\\Shwong\\source\\repos\\TeemoHoverTest\\TeemoHoverTest\\Resources\\" + filename));
+            mp.Open(new System.Uri(dir + "\\TeemoSounds\\" + filename));
             mp.Play();
         }
 
@@ -727,7 +730,7 @@ namespace TeemoHoverTest
         {
             // Set the background to fire!
             this.Background = new ImageBrush(new BitmapImage(
-                new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/firebg.jpg").AbsoluteUri)));
+                new Uri(new Uri(dir + "\\Images\\firebg.jpg").AbsoluteUri)));
 
             // Make Devil Teemo visible
             Devil_Teemo.Fill = CreateDevilTeemoButton();
