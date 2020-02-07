@@ -1,0 +1,287 @@
+﻿<Window x:Class="TeemoHoverTest.MainWindow"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TeemoHoverTest"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Title="HoverTest"
+        Height="800" Width="1500" WindowState="Maximized" WindowStyle="None" >
+
+    <Window.Resources>
+        <Style TargetType="Rectangle">
+            <Setter Property="Fill" Value="White"/>
+            <Setter Property="Stroke" Value="LightGray" />
+            <Setter Property="StrokeThickness" Value="0.5" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Storyboard x:Key="Teemo_Expand">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.5" By="1" Duration="0:0:3" />
+            <DoubleAnimation Storyboard.TargetProperty="Height" BeginTime="0:0:3" From="5" By="2000" AccelerationRatio="0.25" DecelerationRatio="0.75" Duration="0:0:20" />
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:3" From="5" By="2000" AccelerationRatio="0.25" DecelerationRatio="0.75" Duration="0:0:20" />
+        </Storyboard>
+
+        <!--Shroom image fades out-->
+        <Storyboard x:Key="Shroom_Explosion">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0" />
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" BeginTime="0:0:1" To="0" AccelerationRatio="1" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--#region Health bar animations-->
+
+        <!--First shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease1">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="550" To="459" DecelerationRatio="0.25" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--Second shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease2">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="459" To="368" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--Third shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease3">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="368" To="277" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--Fourth shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease4">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="277" To="186" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--Fifth shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease5">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="186" To="95" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--Last shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease6">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="95" To="4" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--#endregion-->
+
+
+    </Window.Resources>
+    <Window.Background>
+        <ImageBrush ImageSource="Images/summonersrift.png"/>
+    </Window.Background>
+
+
+    <Grid x:Name="GridContainer" MouseLeftButtonUp="Teemo_Idle_Voice">
+
+        <!--#region Grid dimensions-->
+
+        <!--13 columns -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--8 rows-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--#endregion-->
+
+        <!--#region Grid Spots: 104-->
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_0" Grid.Row="0" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_1" Grid.Row="0" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_2" Grid.Row="0" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_3" Grid.Row="0" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_4" Grid.Row="0" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_5" Grid.Row="0" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_6" Grid.Row="0" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_7" Grid.Row="0" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_8" Grid.Row="0" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_9" Grid.Row="0" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_10" Grid.Row="0" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_11" Grid.Row="0" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle0_12" Grid.Row="0" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_0" Grid.Row="1" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_1" Grid.Row="1" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_2" Grid.Row="1" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_3" Grid.Row="1" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_4" Grid.Row="1" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_5" Grid.Row="1" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_6" Grid.Row="1" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_7" Grid.Row="1" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_8" Grid.Row="1" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_9" Grid.Row="1" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_10" Grid.Row="1" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_11" Grid.Row="1" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle1_12" Grid.Row="1" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_0" Grid.Row="2" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_1" Grid.Row="2" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_2" Grid.Row="2" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_3" Grid.Row="2" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_4" Grid.Row="2" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_5" Grid.Row="2" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_6" Grid.Row="2" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_7" Grid.Row="2" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_8" Grid.Row="2" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_9" Grid.Row="2" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_10" Grid.Row="2" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_11" Grid.Row="2" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle2_12" Grid.Row="2" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_0" Grid.Row="3" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_1" Grid.Row="3" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_2" Grid.Row="3" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_3" Grid.Row="3" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_4" Grid.Row="3" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_5" Grid.Row="3" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_6" Grid.Row="3" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_7" Grid.Row="3" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_8" Grid.Row="3" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_9" Grid.Row="3" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_10" Grid.Row="3" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_11" Grid.Row="3" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle3_12" Grid.Row="3" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_0" Grid.Row="4" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_1" Grid.Row="4" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_2" Grid.Row="4" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_3" Grid.Row="4" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_4" Grid.Row="4" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_5" Grid.Row="4" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_6" Grid.Row="4" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_7" Grid.Row="4" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_8" Grid.Row="4" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_9" Grid.Row="4" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_10" Grid.Row="4" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_11" Grid.Row="4" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle4_12" Grid.Row="4" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_0" Grid.Row="5" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_1" Grid.Row="5" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_2" Grid.Row="5" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_3" Grid.Row="5" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_4" Grid.Row="5" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_5" Grid.Row="5" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_6" Grid.Row="5" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_7" Grid.Row="5" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_8" Grid.Row="5" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_9" Grid.Row="5" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_10" Grid.Row="5" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_11" Grid.Row="5" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle5_12" Grid.Row="5" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_0" Grid.Row="6" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_1" Grid.Row="6" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_2" Grid.Row="6" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_3" Grid.Row="6" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_4" Grid.Row="6" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_5" Grid.Row="6" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_6" Grid.Row="6" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_7" Grid.Row="6" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_8" Grid.Row="6" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_9" Grid.Row="6" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_10" Grid.Row="6" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_11" Grid.Row="6" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle6_12" Grid.Row="6" Grid.Column="12" />
+
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_0" Grid.Row="7" Grid.Column="0" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_1" Grid.Row="7" Grid.Column="1" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_2" Grid.Row="7" Grid.Column="2" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_3" Grid.Row="7" Grid.Column="3" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_4" Grid.Row="7" Grid.Column="4" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_5" Grid.Row="7" Grid.Column="5" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_6" Grid.Row="7" Grid.Column="6" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_7" Grid.Row="7" Grid.Column="7" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_8" Grid.Row="7" Grid.Column="8" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_9" Grid.Row="7" Grid.Column="9" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_10" Grid.Row="7" Grid.Column="10" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_11" Grid.Row="7" Grid.Column="11" />
+        <Rectangle MouseEnter="Hover_Shroom" x:Name="Rectangle7_12" Grid.Row="7" Grid.Column="12" />
+
+        <!--#endregion-->
+
+        <!--#region Health bar HUD-->
+
+        <Label x:Name="Health_Bar_Back" Background="Black"
+                   Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="6" Margin="16,69.6,0,0"
+                   HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2" >
+        </Label>
+
+        <Label x:Name="Health_Bar_Front" Background="Green" BorderThickness="3" BorderBrush="DarkSlateGray"
+                Height="38" Width="551" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="6" Margin="15,69.6,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2" >
+            <Label x:Name="Health_Bar_Front_Layer" Background="LimeGreen" BorderThickness="0"
+                Height="23" Width="550"
+                HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Label>
+
+        <Label x:Name="Health_Text" Foreground="WhiteSmoke" FontWeight="Black"
+               Height="38" Width="250" Grid.ColumnSpan="3" Grid.Column="5" Grid.Row="6" Margin="48.8,69.6,46.8,84.4"
+               VerticalAlignment="Center" HorizontalAlignment="Center"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+               Content="1550 / 1550" FontFamily="Times New Roman" FontSize="18" Grid.RowSpan="2" >
+        </Label>
+
+        <!--#endregion-->
+
+        <!--#region Mana bar HUD-->
+
+        <Label x:Name="Mana_Bar_Back" Background="Black" BorderThickness="3" BorderBrush="Black"
+                   Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="7" Margin="16,11.6,0,0"
+                   HorizontalAlignment="Left" VerticalAlignment="Top" >
+        </Label>
+
+        <Label x:Name="Mana_Bar_Front" Background="DarkBlue" BorderThickness="2" BorderBrush="DarkSlateGray"
+                Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="7" Margin="16,11.6,10,0"
+                HorizontalAlignment="Center" VerticalAlignment="Top" >
+            <Label x:Name="Mana_Bar_Front_Layer" Background="MediumBlue" BorderThickness="0"
+                Height="23" Width="550"
+                HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Label>
+
+        <Label x:Name="Mana_Text" Foreground="WhiteSmoke" FontWeight="Black"
+               Height="38" Width="250" Grid.ColumnSpan="3" Grid.Column="5" Grid.Row="7" Margin="48.8,11.6,46.8,46.4"
+               VerticalAlignment="Center" HorizontalAlignment="Center"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+               Content="1550 / 1550" FontFamily="Times New Roman" FontSize="18" >
+        </Label>
+
+        <!--#endregion-->
+
+        <!--#region Teemo assets-->
+
+        <Rectangle x:Name="Devil_Teemo" Opacity="0" StrokeThickness="0"
+               Width="5" Height="5" Grid.ColumnSpan="13" Grid.RowSpan="8"
+               HorizontalAlignment="Center"  VerticalAlignment="Center" />
+
+        <Rectangle MouseMove="Move_Teemo" x:Name="Teemo" Width="200" Height="200" StrokeThickness="0"
+               Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="13" Grid.RowSpan="8"
+               Margin="645,250,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <!--#endregion-->
+
+    </Grid>
+
+</Window>
