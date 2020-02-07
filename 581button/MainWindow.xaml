@@ -1,76 +1,114 @@
-﻿<Window x:Class="TeemoHoverTest.MainWindow"
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<Window x:Class="TeemoHoverTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:TeemoHoverTest"
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="HoverTest"
-        Height="800" Width="1500" WindowState="Maximized" WindowStyle="None" >
+        Height="800" Width="1500" >
 
     <Window.Resources>
         <Style TargetType="Rectangle">
             <Setter Property="Fill" Value="White"/>
-            <Setter Property="Stroke" Value="LightGray" />
-            <Setter Property="StrokeThickness" Value="0.5" />
+            <Setter Property="StrokeThickness" Value="0" />
             <Setter Property="Opacity" Value="0" />
         </Style>
+        
+        <!--#region Health bar animations-->
 
+        <!--1st shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease1">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="550" To="505" DecelerationRatio="0.25" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--2nd shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease2">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="505" To="460" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--3rd shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease3">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="460" To="415" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--4th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease4">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="415" To="370" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--5th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease5">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="370" To="325" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--6th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease6">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="325" To="280" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--7th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease7">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="280" To="235" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--8th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease8">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="235" To="190" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--9th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease9">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="190" To="145" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--10th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease10">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="145" To="100" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--11th shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease11">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="100" To="55" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--Last shroom is hit-->
+        <Storyboard x:Key="Health_Bar_Decrease12">
+            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.1" From="55" To="10" DecelerationRatio="0.5" Duration="0:0:0.25" />
+        </Storyboard>
+
+        <!--#endregion-->
+        
+        <!--Shroom image fades out-->
+        <Storyboard x:Key="Shroom_Explosion">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.7" Duration="0:0:0" />
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" BeginTime="0:0:1" To="0" AccelerationRatio="1" Duration="0:0:0.25" />
+        </Storyboard>
+        
+        <!--Teemo fades away-->
+        <Storyboard x:Key="Teemo_Fadeaway">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" BeginTime="0:0:1" To="0" AccelerationRatio="1" Duration="0:0:1" />
+        </Storyboard>
+        
+        <!--Devil Teemo expansion-->
         <Storyboard x:Key="Teemo_Expand">
             <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.5" By="1" Duration="0:0:3" />
             <DoubleAnimation Storyboard.TargetProperty="Height" BeginTime="0:0:3" From="5" By="2000" AccelerationRatio="0.25" DecelerationRatio="0.75" Duration="0:0:20" />
             <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:3" From="5" By="2000" AccelerationRatio="0.25" DecelerationRatio="0.75" Duration="0:0:20" />
         </Storyboard>
 
-        <!--Shroom image fades out-->
-        <Storyboard x:Key="Shroom_Explosion">
-            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0" />
-            <DoubleAnimation Storyboard.TargetProperty="Opacity" BeginTime="0:0:1" To="0" AccelerationRatio="1" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--#region Health bar animations-->
-
-        <!--First shroom is hit-->
-        <Storyboard x:Key="Health_Bar_Decrease1">
-            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="550" To="459" DecelerationRatio="0.25" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--Second shroom is hit-->
-        <Storyboard x:Key="Health_Bar_Decrease2">
-            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="459" To="368" DecelerationRatio="0.5" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--Third shroom is hit-->
-        <Storyboard x:Key="Health_Bar_Decrease3">
-            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="368" To="277" DecelerationRatio="0.5" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--Fourth shroom is hit-->
-        <Storyboard x:Key="Health_Bar_Decrease4">
-            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="277" To="186" DecelerationRatio="0.5" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--Fifth shroom is hit-->
-        <Storyboard x:Key="Health_Bar_Decrease5">
-            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="186" To="95" DecelerationRatio="0.5" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--Last shroom is hit-->
-        <Storyboard x:Key="Health_Bar_Decrease6">
-            <DoubleAnimation Storyboard.TargetProperty="Width" BeginTime="0:0:0.25" From="95" To="4" DecelerationRatio="0.5" Duration="0:0:0.25" />
-        </Storyboard>
-
-        <!--#endregion-->
-
-
     </Window.Resources>
+
+    <!--Background-->
     <Window.Background>
-        <ImageBrush ImageSource="Images/summonersrift.png"/>
+        <ImageBrush ImageSource="Resources/summonersrift.png"/>
     </Window.Background>
 
-
+    
+    <!--Grid-->
     <Grid x:Name="GridContainer" MouseLeftButtonUp="Teemo_Idle_Voice">
 
         <!--#region Grid dimensions-->
@@ -224,48 +262,48 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 
         <!--#region Health bar HUD-->
 
-        <Label x:Name="Health_Bar_Back" Background="Black"
-                   Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="6" Margin="16,69.6,0,0"
+        <Label x:Name="Health_Bar_Back" Background="Black" Visibility="Collapsed"
+                   Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="6" Margin="16,69.6,0,0" 
                    HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2" >
         </Label>
 
-        <Label x:Name="Health_Bar_Front" Background="Green" BorderThickness="3" BorderBrush="DarkSlateGray"
-                Height="38" Width="551" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="6" Margin="15,69.6,0,0"
+        <Label x:Name="Health_Bar_Front" Background="Green" BorderThickness="3" BorderBrush="DarkSlateGray" Visibility="Collapsed"
+                Height="38" Width="551" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="6" Margin="15,69.6,0,0" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2" >
             <Label x:Name="Health_Bar_Front_Layer" Background="LimeGreen" BorderThickness="0"
-                Height="23" Width="550"
+                Height="23" Width="550" 
                 HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Label>
 
-        <Label x:Name="Health_Text" Foreground="WhiteSmoke" FontWeight="Black"
-               Height="38" Width="250" Grid.ColumnSpan="3" Grid.Column="5" Grid.Row="6" Margin="48.8,69.6,46.8,84.4"
+        <Label x:Name="Health_Text" Foreground="WhiteSmoke" FontWeight="Black" Visibility="Collapsed"
+               Height="38" Width="250" Grid.ColumnSpan="3" Grid.Column="5" Grid.Row="6" Margin="48.8,69.6,46.8,84.4" 
                VerticalAlignment="Center" HorizontalAlignment="Center"
                VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-               Content="1550 / 1550" FontFamily="Times New Roman" FontSize="18" Grid.RowSpan="2" >
+               Content="2375 / 2375" FontFamily="Times New Roman" FontSize="18" Grid.RowSpan="2" >
         </Label>
 
         <!--#endregion-->
 
         <!--#region Mana bar HUD-->
 
-        <Label x:Name="Mana_Bar_Back" Background="Black" BorderThickness="3" BorderBrush="Black"
-                   Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="7" Margin="16,11.6,0,0"
+        <Label x:Name="Mana_Bar_Back" Background="Black" BorderThickness="3" BorderBrush="Black" Visibility="Collapsed"
+                   Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="7" Margin="16,11.6,0,0" 
                    HorizontalAlignment="Left" VerticalAlignment="Top" >
         </Label>
 
-        <Label x:Name="Mana_Bar_Front" Background="DarkBlue" BorderThickness="2" BorderBrush="DarkSlateGray"
-                Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="7" Margin="16,11.6,10,0"
+        <Label x:Name="Mana_Bar_Front" Background="DarkBlue" BorderThickness="2" BorderBrush="DarkSlateGray" Visibility="Collapsed"
+                Height="38" Width="550" Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="7" Margin="16,11.6,10,0" 
                 HorizontalAlignment="Center" VerticalAlignment="Top" >
             <Label x:Name="Mana_Bar_Front_Layer" Background="MediumBlue" BorderThickness="0"
-                Height="23" Width="550"
+                Height="23" Width="550" 
                 HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Label>
 
-        <Label x:Name="Mana_Text" Foreground="WhiteSmoke" FontWeight="Black"
-               Height="38" Width="250" Grid.ColumnSpan="3" Grid.Column="5" Grid.Row="7" Margin="48.8,11.6,46.8,46.4"
+        <Label x:Name="Mana_Text" Foreground="WhiteSmoke" FontWeight="Black" Visibility="Collapsed"
+               Height="38" Width="250" Grid.ColumnSpan="3" Grid.Column="5" Grid.Row="7" Margin="48.8,11.6,46.8,46.4" 
                VerticalAlignment="Center" HorizontalAlignment="Center"
                VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-               Content="1550 / 1550" FontFamily="Times New Roman" FontSize="18" >
+               Content="1553 / 1553" FontFamily="Times New Roman" FontSize="18" >
         </Label>
 
         <!--#endregion-->
