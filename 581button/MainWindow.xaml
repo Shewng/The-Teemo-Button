@@ -104,7 +104,7 @@
 
     <!--Background-->
     <Window.Background>
-        <ImageBrush ImageSource="Resources/summonersrift.png"/>
+        <ImageBrush ImageSource="Images/summonersrift.png"/>
     </Window.Background>
 
     
