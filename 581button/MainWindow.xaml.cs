@@ -1,20 +1,12 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Timers;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
-using System.Windows.Threading;
 using System.Windows.Media.Animation;
 
 namespace TeemoHoverTest
@@ -33,11 +25,6 @@ namespace TeemoHoverTest
         private CellType[] gridSpots;
 
         /// <summary>
-        /// True if the game has ended
-        /// </summary>
-        private bool gameEnded;
-
-        /// <summary>
         /// Keeps track of the player's current health
         /// </summary>
         private int health;
@@ -47,64 +34,50 @@ namespace TeemoHoverTest
         /// </summary>
         private readonly Random rand = new Random();
 
-        private int xDirection = 1;
-        private int yDirection = 1;
-
-        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
-
-        private System.Timers.Timer myTimer = new System.Timers.Timer(1500);
-
-        private static readonly TimeSpan minInterval = TimeSpan.FromSeconds(3);
-
-        private readonly Stopwatch stopwatch = new Stopwatch();
-
-        private MediaPlayer mediaPlayer1 = new MediaPlayer();
-        private MediaPlayer mediaPlayer2 = new MediaPlayer();
-        private MediaPlayer mediaPlayer3 = new MediaPlayer();
-        private MediaPlayer mediaPlayer4 = new MediaPlayer();
-        private MediaPlayer mediaPlayer5 = new MediaPlayer();
-        private MediaPlayer mediaPlayer6 = new MediaPlayer();
-        private MediaPlayer mediaPlayer7 = new MediaPlayer();
-
         /// <summary>
-        /// Use specified MediaPlayer to play an audio file
-        /// Path must be absolute, user should change string in mp.Open(new System.Uri("<path>" + filename));
+        /// Mediaplayers for multiple sound overlays
         /// </summary>
-        /// <param name="mp"></param>
-        /// <param name="filename"></param>
-        private void PlayAudio(MediaPlayer mp, String filename)
-        {
-            mp.Open(new System.Uri("C:\\Users\\katie\\source\\repos\\581button\\581button\\TeemoSounds\\" + filename));
-            mp.Play();
-        }
+        #region Mediaplayers
+        private readonly MediaPlayer mediaPlayer1 = new MediaPlayer();
+        private readonly MediaPlayer mediaPlayer2 = new MediaPlayer();
+        private readonly MediaPlayer mediaPlayer3 = new MediaPlayer();
+        private readonly MediaPlayer mediaPlayer4 = new MediaPlayer();
+        private readonly MediaPlayer mediaPlayer5 = new MediaPlayer();
+        private readonly MediaPlayer mediaPlayer6 = new MediaPlayer();
+        private readonly MediaPlayer mediaPlayer7 = new MediaPlayer();
+        #endregion
+
+        #endregion
+
+        #region Assets
 
         /// <summary>
         /// The picture of Teemo's shroom
         /// </summary>
-        private ImageBrush ShroomPic()
+        private ImageBrush CreateShroom()
         {
             // Grabbing the picture of the shroom
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri("pack://application:,,,/Images/mushroom-transparent.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/shroomtest.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
 
             return img;
         }
-
+        
         /// <summary>
         /// The picture of the Teemo button
         /// </summary>
-        private ImageBrush TeemoButton()
+        private ImageBrush CreateTeemoButton()
         {
             // Grabbing the picture of the shroom
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri("pack://application:,,,/Images/teemobutton.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/teemobutton.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
@@ -115,13 +88,13 @@ namespace TeemoHoverTest
         /// <summary>
         /// The picture of the Devil Teemo button
         /// </summary>
-        private ImageBrush DevilTeemoButton()
+        private ImageBrush CreateDevilTeemoButton()
         {
             // Grabbing the picture of the shroom
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri("pack://application:,,,/Images/devilteemobutton.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/devilteemobutton.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
@@ -131,21 +104,22 @@ namespace TeemoHoverTest
 
         #endregion
 
-        #region Constructor
+        #region Helper methods
 
         /// <summary>
-        /// Default Constructor
+        /// Use specified MediaPlayer to play an audio file
+        /// Path must be absolute, user should change string in mp.Open(new System.Uri("<path>" + filename));
         /// </summary>
-        public MainWindow()
+        /// <param name="mp">Which mediaplayer to use</param>
+        /// <param name="filename">The file that contains the audio to play</param>
+        private void PlayAudio(MediaPlayer mp, String filename)
         {
-            this.KeyUp += Key_CloseWindow;
-            InitializeComponent();
-
-            NewGame();
+            mp.Open(new System.Uri("C:\\Users\\Shwong\\source\\repos\\TeemoHoverTest\\TeemoHoverTest\\Resources\\" + filename));
+            mp.Play();
         }
 
         /// <summary>
-        /// Short cut to close the window
+        /// Keyboard shortcut to close the window
         /// </summary>
         /// <param name="sender">The key that was pressed</param>
         /// <param name="e">The events of the key press</param>
@@ -157,128 +131,22 @@ namespace TeemoHoverTest
 
         #endregion
 
+        #region Constructor
 
         /// <summary>
-        /// Move Teemo depending on the cursor and margin of the screen
+        /// Default Constructor
         /// </summary>
-        /// <param name="sender">Touching Teemo with the mouse</param>
-        /// <param name="e">The events of the touch</param>
-        private async void Move_Teemo(object sender, MouseEventArgs e)
+        public MainWindow()
         {
-            // Get the x and y coordinates of the mouse pointer.
-            System.Windows.Point position = e.GetPosition(this);
-            double pX = position.X;
-            double pY = position.Y;
+            // Helper method
+            this.KeyUp += Key_CloseWindow;
+            InitializeComponent();
 
-
-            for (int i = 0; i < 5; i++)    // Move in small increments so it's not choppy
-            {
-                Thickness margin = Teemo.Margin;
-                // Push Teemo based on mouse position
-                if (pX >= margin.Left - 50 && pX <= margin.Left + 50)   // push teemo from left
-                {
-                    if (margin.Left >= 1100) // If at right border of window, shift left
-                    {
-                        margin.Left -= 200;
-                    }
-                    else
-                    {
-                        margin.Left += 10;
-                    }
-                }
-                if (pX <= margin.Left + 200 && pX >= margin.Left + 150) // push teemo from right
-                {
-                    if (margin.Left <= 0)  // If at left border of window, shift right
-                    {
-                        margin.Left += 200;
-                    }
-                    else
-                    {
-                        margin.Left -= 10;
-                    }
-                }
-                if (pY >= margin.Top - 50 && pY <= margin.Top + 50)      // push teemo from top
-                {
-                    if (margin.Top >= 600)  // If at bottom border of window, shift up
-                    {
-                        margin.Top -= 200;
-                    }
-                    else
-                    {
-                        margin.Top += 10;
-                    }
-                }
-                if (pY <= margin.Top + 200 && pY >= margin.Top + 150)   // push teemo from bottom
-                {
-                    if (margin.Top <= 0)    // If at top border of window, shift down
-                    {
-                        margin.Top += 200;
-                    }
-                    else
-                    {
-                        margin.Top -= 10;
-                    }
-                }
-
-                Teemo.Margin = margin;
-                await Task.Delay(1);
-
-                // 5% chance of Teemo laughing while running
-                int laughChance = 5;
-                int randnum = rand.Next(10);
-                int laughType = rand.Next(3);
-                if (randnum == laughChance && laughType == 0)
-                {
-                    PlayAudio(mediaPlayer1, "teemoLaugh1.mp3");
-                }
-                else if (randnum == laughChance && laughType == 1)
-                {
-                    PlayAudio(mediaPlayer1, "teemoLaugh2.mp3");
-                }
-                else if (randnum == laughChance && laughType == 2)
-                {
-                    PlayAudio(mediaPlayer1, "teemoLaugh3.mp3");
-                }
-                else
-                {
-                    return;
-                }
-
-            }
+            // Create a new game upon application launch
+            NewGame();
         }
 
-        private void Teemo_Idle_Voice(object sender, MouseEventArgs e)
-        {
-            int chance = 5;
-            int randnum = rand.Next(500);
-            int voicelineType = rand.Next(4);
-            if (randnum == chance && voicelineType == 0)
-            {
-                // Armed and Ready!
-                PlayAudio(mediaPlayer3, "teemoidle1.mp3");
-            }
-            else if (randnum == chance && voicelineType == 1)
-            {
-                // Captain Teemo on duty!
-                PlayAudio(mediaPlayer3, "teemoidle2.mp3");
-            }
-            else if (randnum == chance && voicelineType == 2)
-            {
-                // Hut, 2 3 4!
-                PlayAudio(mediaPlayer3, "teemoidle3.mp3");
-            }
-            else if (randnum == chance && voicelineType == 3)
-            {
-                // Yes sir!
-                PlayAudio(mediaPlayer3, "teemoidle4.mp3");
-            }
-            else
-            {
-                return;
-            }
-
-        }
-
+        #endregion
 
         /// <summary>
         /// Starts a new game while resetting all values back to the original state
@@ -298,31 +166,31 @@ namespace TeemoHoverTest
                 rect.Fill = Brushes.White;
             });
 
-            // Set Teemo to be visible
-            Teemo.Fill = TeemoButton();
+            // Reset Teemo
+            Teemo.Fill = CreateTeemoButton();
+            Teemo.Margin = new Thickness(645, 250, 0, 0);
+            Teemo.Visibility = Visibility.Visible;
             Teemo.Opacity = 1;
 
-            // Clear off Devil Teemo
+            // Reset Devil Teemo
+            //Devil_Teemo.Visibility = Visibility.Collapsed;
             Devil_Teemo.Width = 5;
             Devil_Teemo.Height = 5;
             Devil_Teemo.Opacity = 0;
 
             // Make the health bar visible
-            Health_Bar_Front.Opacity = 1;
-            Health_Bar_Back.Opacity = 1;
-            Health_Text.Opacity = 1;
+            Health_Bar_Front.Visibility = Visibility.Visible;
+            Health_Bar_Back.Visibility = Visibility.Visible;
+            Health_Text.Visibility = Visibility.Visible;
 
             // Make the mana bar visible
-            Mana_Bar_Front.Opacity = 1;
-            Mana_Bar_Back.Opacity = 1;
-            Mana_Text.Opacity = 1;
+            Mana_Bar_Front.Visibility = Visibility.Visible;
+            Mana_Bar_Back.Visibility = Visibility.Visible;
+            Mana_Text.Visibility = Visibility.Visible;
 
             // Set the player's health bar
-            health = 1550;
+            health = 2375;
             Health_Bar_Front.Width = 550;
-
-            // Reset; the game has started again
-            gameEnded = false;
 
             // Place the initial invisible shrooms on the board
             PlaceInitShrooms();
@@ -334,10 +202,10 @@ namespace TeemoHoverTest
         /// </summary>
         private void PlaceInitShrooms()
         {
-            // Grab the image of the shroom
-            ImageBrush shroom = ShroomPic();
-
             #region Shroom randomization
+            
+            // Grab the image of the shroom
+            ImageBrush shroom = CreateShroom();
 
             // Generate a random number for every section of the grid (3 spots in a row, for now)
             int r0 = rand.Next(0, 3);
@@ -416,41 +284,41 @@ namespace TeemoHoverTest
 
             // Place them officially by swapping their images to shrooms
             // Make them invisible
-            cells0.Fill = ShroomPic(); cells0.Opacity = 0.01;
-            cells1.Fill = ShroomPic(); cells1.Opacity = 0.01;
-            cells2.Fill = ShroomPic(); cells2.Opacity = 0.01;
-            cells3.Fill = ShroomPic(); cells3.Opacity = 0.01;
-            cells4.Fill = ShroomPic(); cells4.Opacity = 0.01;
-            cells5.Fill = ShroomPic(); cells5.Opacity = 0.01;
-            cells6.Fill = ShroomPic(); cells6.Opacity = 0.01;
-            cells7.Fill = ShroomPic(); cells7.Opacity = 0.01;
-            cells8.Fill = ShroomPic(); cells8.Opacity = 0.01;
-            cells9.Fill = ShroomPic(); cells9.Opacity = 0.01;
-            cells10.Fill = ShroomPic(); cells10.Opacity = 0.01;
-            cells11.Fill = ShroomPic(); cells11.Opacity = 0.01;
-            cells12.Fill = ShroomPic(); cells12.Opacity = 0.01;
-            cells13.Fill = ShroomPic(); cells13.Opacity = 0.01;
-            cells14.Fill = ShroomPic(); cells14.Opacity = 0.01;
-            cells15.Fill = ShroomPic(); cells15.Opacity = 0.01;
-            cells16.Fill = ShroomPic(); cells16.Opacity = 0.01;
-            cells17.Fill = ShroomPic(); cells17.Opacity = 0.01;
-            cells18.Fill = ShroomPic(); cells18.Opacity = 0.01;
-            cells19.Fill = ShroomPic(); cells19.Opacity = 0.01;
-            cells20.Fill = ShroomPic(); cells20.Opacity = 0.01;
-            cells21.Fill = ShroomPic(); cells21.Opacity = 0.01;
-            cells22.Fill = ShroomPic(); cells22.Opacity = 0.01;
-            cells23.Fill = ShroomPic(); cells23.Opacity = 0.01;
-            cells24.Fill = ShroomPic(); cells24.Opacity = 0.01;
-            cells25.Fill = ShroomPic(); cells25.Opacity = 0.01;
-            cells26.Fill = ShroomPic(); cells26.Opacity = 0.01;
-            cells27.Fill = ShroomPic(); cells27.Opacity = 0.01;
-            cells28.Fill = ShroomPic(); cells28.Opacity = 0.01;
-            cells29.Fill = ShroomPic(); cells29.Opacity = 0.01;
-            cells30.Fill = ShroomPic(); cells30.Opacity = 0.01;
-            cells31.Fill = ShroomPic(); cells31.Opacity = 0.01;
-            cells32.Fill = ShroomPic(); cells32.Opacity = 0.01;
-            cells33.Fill = ShroomPic(); cells33.Opacity = 0.01;
-            cells34.Fill = ShroomPic(); cells34.Opacity = 0.01;
+            cells0.Fill = shroom; cells0.Opacity = 0.01;
+            cells1.Fill = shroom; cells1.Opacity = 0.01;
+            cells2.Fill = shroom; cells2.Opacity = 0.01;
+            cells3.Fill = shroom; cells3.Opacity = 0.01;
+            cells4.Fill = shroom; cells4.Opacity = 0.01;
+            cells5.Fill = shroom; cells5.Opacity = 0.01;
+            cells6.Fill = shroom; cells6.Opacity = 0.01;
+            cells7.Fill = shroom; cells7.Opacity = 0.01;
+            cells8.Fill = shroom; cells8.Opacity = 0.01;
+            cells9.Fill = shroom; cells9.Opacity = 0.01;
+            cells10.Fill = shroom; cells10.Opacity = 0.01;
+            cells11.Fill = shroom; cells11.Opacity = 0.01;
+            cells12.Fill = shroom; cells12.Opacity = 0.01;
+            cells13.Fill = shroom; cells13.Opacity = 0.01;
+            cells14.Fill = shroom; cells14.Opacity = 0.01;
+            cells15.Fill = shroom; cells15.Opacity = 0.01;
+            cells16.Fill = shroom; cells16.Opacity = 0.01;
+            cells17.Fill = shroom; cells17.Opacity = 0.01;
+            cells18.Fill = shroom; cells18.Opacity = 0.01;
+            cells19.Fill = shroom; cells19.Opacity = 0.01;
+            cells20.Fill = shroom; cells20.Opacity = 0.01;
+            cells21.Fill = shroom; cells21.Opacity = 0.01;
+            cells22.Fill = shroom; cells22.Opacity = 0.01;
+            cells23.Fill = shroom; cells23.Opacity = 0.01;
+            cells24.Fill = shroom; cells24.Opacity = 0.01;
+            cells25.Fill = shroom; cells25.Opacity = 0.01;
+            cells26.Fill = shroom; cells26.Opacity = 0.01;
+            cells27.Fill = shroom; cells27.Opacity = 0.01;
+            cells28.Fill = shroom; cells28.Opacity = 0.01;
+            cells29.Fill = shroom; cells29.Opacity = 0.01;
+            cells30.Fill = shroom; cells30.Opacity = 0.01;
+            cells31.Fill = shroom; cells31.Opacity = 0.01;
+            cells32.Fill = shroom; cells32.Opacity = 0.01;
+            cells33.Fill = shroom; cells33.Opacity = 0.01;
+            cells34.Fill = shroom; cells34.Opacity = 0.01;
 
 
             // This is the important part
@@ -489,9 +357,152 @@ namespace TeemoHoverTest
             gridSpots[r31] = CellType.Shroomed;
             gridSpots[r32] = CellType.Shroomed;
             gridSpots[r33] = CellType.Shroomed;
-            gridSpots[r34] = CellType.Shroomed;
+            gridSpots[r34] = CellType.Shroomed; 
 
             #endregion
+        }
+
+
+        /// <summary>
+        /// Move Teemo depending on the cursor and margin of the screen
+        /// </summary>
+        /// <param name="sender">Touching Teemo with the mouse</param>
+        /// <param name="e">The events of the touch</param>
+        private async void Move_Teemo(object sender, MouseEventArgs e)
+        {
+            // Get the x and y coordinates of the mouse pointer
+            System.Windows.Point position = e.GetPosition(this);
+            double pX = position.X;
+            double pY = position.Y;
+
+            // Move in small increments so it's not choppy
+            for (int i = 0; i < 5; i++)
+            {
+
+                #region Movement logic
+
+                Thickness margin = Teemo.Margin;
+                // Push Teemo based on mouse position
+                if (pX >= margin.Left - 50 && pX <= margin.Left + 50)   // push teemo from left
+                {
+                    if (margin.Left >= 1300) // If at right border of window, shift left
+                    {
+                        margin.Left -= 200;
+                    }
+                    else
+                    {
+                        margin.Left += 10;
+                    }
+                }
+                if (pX <= margin.Left + 200 && pX >= margin.Left + 150) // push teemo from right
+                {
+                    if (margin.Left <= 0)  // If at left border of window, shift right
+                    {
+                        margin.Left += 200;
+                    }
+                    else
+                    {
+                        margin.Left -= 10;
+                    }
+                }
+                if (pY >= margin.Top - 50 && pY <= margin.Top + 50)      // push teemo from top
+                {
+                    if (margin.Top >= 600)  // If at bottom border of window, shift up
+                    {
+                        margin.Top -= 200;
+                    }
+                    else
+                    {
+                        margin.Top += 10;
+                    }
+                }
+                if (pY <= margin.Top + 200 && pY >= margin.Top + 150)   // push teemo from bottom
+                {
+                    if (margin.Top <= 0)    // If at top border of window, shift down
+                    {
+                        margin.Top += 200;
+                    }
+                    else
+                    {
+                        margin.Top -= 10;
+                    }
+                }
+
+                Teemo.Margin = margin;
+                await Task.Delay(1);
+
+                #endregion
+
+                #region Laugh logic
+
+                // 50% chance of Teemo laughing while running
+                int laughChance = 5;
+                int randnum = rand.Next(10);
+                int laughType = rand.Next(3);
+
+                // Teemo may laugh if you touch him; different kinds of laughs
+                if (randnum == laughChance && laughType == 0)
+                {
+                    PlayAudio(mediaPlayer2, "teemoLaugh1.mp3");
+                }
+                else if (randnum == laughChance && laughType == 1)
+                {
+                    PlayAudio(mediaPlayer2, "teemoLaugh2.mp3");
+                }
+                else if (randnum == laughChance && laughType == 2)
+                {
+                    PlayAudio(mediaPlayer2, "teemoLaugh3.mp3");
+                }
+                else
+                    return;
+
+                #endregion
+
+            }
+        }
+
+
+        /// <summary>
+        /// Randomly play Teemo's voicelines when trying to click him
+        /// </summary>
+        /// <param name="sender">A click of the mouse grid</param>
+        /// <param name="e">The events of the mouse click</param>
+        private void Teemo_Idle_Voice(object sender, MouseButtonEventArgs e)
+        {
+            // Variable numbers that create the randomization of voice lines
+            // 33% chance of Teemo saying a voiceline
+            int chance = 5;
+            int randnum = rand.Next(15);
+            int voicelineType = rand.Next(4);
+
+            #region Voicelines logic
+
+            // Teemo may laugh when you touch him
+            if (randnum == chance && voicelineType == 0)
+            {
+                // Armed and Ready!
+                PlayAudio(mediaPlayer3, "teemoidle1.mp3");
+            }
+            else if (randnum == chance && voicelineType == 1)
+            {
+                // Captain Teemo on duty!
+                PlayAudio(mediaPlayer3, "teemoidle2.mp3");
+            }
+            else if (randnum == chance && voicelineType == 2)
+            {
+                // Hut, 2 3 4!
+                PlayAudio(mediaPlayer3, "teemoidle3.mp3");
+            }
+            else if (randnum == chance && voicelineType == 3)
+            {
+                // Yes sir!
+                PlayAudio(mediaPlayer3, "teemoidle4.mp3");
+            }
+            else
+                return;
+
+            #endregion
+
         }
 
 
@@ -502,6 +513,7 @@ namespace TeemoHoverTest
         /// <param name="e">The events of the hover</param>
         private void Hover_Shroom(object sender, RoutedEventArgs e)
         {
+
             // Cast sender to a rectangle
             Rectangle rect = (Rectangle)sender;
 
@@ -514,33 +526,36 @@ namespace TeemoHoverTest
             // If you hover over a shroom, delete the shroom, place a new shroom in a random spot, and take damage.
             if (gridSpots[index] == CellType.Shroomed)
             {
-                //rect.Opacity = 0.5;
+                // Shroom explodes
                 Explosion(rect);
 
-                // Delete the rect argument later on
+                // Place a shroom elsewhere on the grid
                 PlaceShroom(index);
 
+                // Lose health
                 TakeDamage();
             }
 
         }
+
 
         /// <summary>
         /// Plays the animation and sound of a shroom explosion
         /// </summary>
         private void Explosion(Rectangle rect)
         {
-            rect.Fill = ShroomPic();
+            // Expose the invisible teemo shroom
             rect.Opacity = 1;
-            // The sound of the shroom exploding
-            PlayAudio(mediaPlayer2, "shroomExplosion.mp3");
 
-            // The visual played on impact
+            // The sound of the shroom exploding
+            PlayAudio(mediaPlayer1, "shroomExplosion.mp3");
+
+            // The shroom visual played on impact
             Storyboard sb1 = Resources["Shroom_Explosion"] as Storyboard;
             sb1.Begin(rect);
 
-
         }
+
 
         /// <summary>
         /// Randomly places a shroom on the grid in an unoccupied spot
@@ -555,15 +570,14 @@ namespace TeemoHoverTest
 
             // Checks if the random spot has a shroom - if it does, find another number until it's free
             // Make sure you don't place a shroom where the cursor currently is
-            while (index == r0 || gridSpots[r0] == CellType.Shroomed)
-            {
+           while (index == r0 || gridSpots[r0] == CellType.Shroomed) {
                 r0 = rand.Next(0, 104);
             }
 
             // The spot is free, so make it shroomed
             gridSpots[r0] = CellType.Shroomed;
             var cell = GridContainer.Children.OfType<Rectangle>().ToList().ElementAt(r0);
-            cell.Fill = ShroomPic();
+            cell.Fill = CreateShroom();
             cell.Opacity = 0.01;
         }
 
@@ -571,61 +585,101 @@ namespace TeemoHoverTest
         /// <summary>
         /// Modifies the player's health after hovering over a shroom
         /// </summary>
-        private void TakeDamage()
+        private async void TakeDamage()
         {
             // Player takes damage; decrease their health
-            health -= 150;
-            Health_Text.Content = health + " / 1800";
+            health -= 198;
+            Health_Text.Content = health + " / 2375";
 
             #region Health bar updates
 
             // Updates the health bar depending on how much health the player has left
-            if (health >= 1290)
+            if (health >= 2175)
             {
                 // Play animation of health bar decreasing
                 Storyboard sb1 = Resources["Health_Bar_Decrease1"] as Storyboard;
                 sb1.Begin(Health_Bar_Front);
             }
-            else if (health >= 1030)
+            else if (health >= 1979)
             {
                 Storyboard sb2 = Resources["Health_Bar_Decrease2"] as Storyboard;
                 sb2.Begin(Health_Bar_Front);
             }
-            else if (health >= 770)
+            else if (health >= 1781)
             {
                 Storyboard sb3 = Resources["Health_Bar_Decrease3"] as Storyboard;
                 sb3.Begin(Health_Bar_Front);
             }
-            else if (health >= 510)
+            else if (health >= 1583)
             {
                 Storyboard sb4 = Resources["Health_Bar_Decrease4"] as Storyboard;
                 sb4.Begin(Health_Bar_Front);
             }
-            else if (health >= 250)
+            else if (health >= 1385)
             {
                 Storyboard sb5 = Resources["Health_Bar_Decrease5"] as Storyboard;
                 sb5.Begin(Health_Bar_Front);
-
+            }
+            else if (health >= 1187)
+            {
+                Storyboard sb6 = Resources["Health_Bar_Decrease6"] as Storyboard;
+                sb6.Begin(Health_Bar_Front);
+            }
+            else if (health >= 989)
+            {
+                Storyboard sb7 = Resources["Health_Bar_Decrease7"] as Storyboard;
+                sb7.Begin(Health_Bar_Front);
+            }
+            else if (health >= 791)
+            {
+                Storyboard sb8 = Resources["Health_Bar_Decrease8"] as Storyboard;
+                sb8.Begin(Health_Bar_Front);
+            }
+            else if (health >= 593)
+            {
+                Storyboard sb9 = Resources["Health_Bar_Decrease9"] as Storyboard;
+                sb9.Begin(Health_Bar_Front);
+            }
+            else if (health >= 395)
+            {
+                Storyboard sb10 = Resources["Health_Bar_Decrease10"] as Storyboard;
+                sb10.Begin(Health_Bar_Front);
+            }
+            else if (health >= 197)
+            {
+                Storyboard sb11 = Resources["Health_Bar_Decrease11"] as Storyboard;
+                sb11.Begin(Health_Bar_Front);
             }
             // Hit the last shroom
             // Health decreases past 0 and the game ends
-            else
+            else if (health <= 0)
             {
-                Health_Text.Content = 0 + " / 1550";
-                Storyboard sb6 = Resources["Health_Bar_Decrease6"] as Storyboard;
-                sb6.Begin(Health_Bar_Front);
+                health = 0;
+                Health_Text.Content = 0 + " / 2375";
+                Storyboard sb12 = Resources["Health_Bar_Decrease12"] as Storyboard;
+                sb12.Begin(Health_Bar_Front);
 
-                sb6.Completed += (s, e) => {
-                    ClearGame();
-                };
-
-                // Wipe the screen in preparation for Teemo's face animation
-                //ClearGame();
             }
+            else
+                return;
 
             #endregion
 
+            // Check if dead
+            if (health <= 0)
+            {
+                // Teemo fades away...
+                Storyboard sb13 = Resources["Teemo_Fadeaway"] as Storyboard;
+                sb13.Begin(Teemo);
+
+                await Task.Delay(3000);
+
+                // Wipe the screen in preparation for Teemo's face animation
+                ClearGame();
+            }
+
         }
+
 
         /// <summary>
         /// Clears the screen of all entities - shrooms, health bar and Teemo
@@ -643,30 +697,44 @@ namespace TeemoHoverTest
                 rect.Fill = Brushes.White;
             });
 
+            // Make Teemo temporarily invisible
+            Teemo.Visibility = Visibility.Collapsed;
+
             // Make the health bar temporarily invisible
-            Health_Bar_Front.Opacity = 0;
-            Health_Bar_Back.Opacity = 0;
-            Health_Text.Opacity = 0;
+            Health_Bar_Front.Visibility = Visibility.Collapsed;
+            Health_Bar_Back.Visibility = Visibility.Collapsed;
+            Health_Text.Visibility = Visibility.Collapsed;
 
             // Make the mana bar temporarily invisible
-            Mana_Bar_Back.Opacity = 0;
-            Mana_Bar_Front.Opacity = 0;
-            Mana_Text.Opacity = 0;
+            Mana_Bar_Back.Visibility = Visibility.Collapsed;
+            Mana_Bar_Front.Visibility = Visibility.Collapsed;
+            Mana_Text.Visibility = Visibility.Collapsed;
 
+            // Devil Teemo fades into the screen (very small)
+            Storyboard sb1 = Resources["Teemo_Expand"] as Storyboard;
+            sb1.Begin(Devil_Teemo);
+
+            // Begin expansion
             PlayDevilTeemo();
-
+            
         }
+
 
         /// <summary>
         /// Plays the Teemo expansion animation
         /// </summary>
         private async void PlayDevilTeemo()
         {
-            this.Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/Images/firebg.jpg")));
-            Devil_Teemo.Fill = DevilTeemoButton();
-            Devil_Teemo.Opacity = 1;
-            Teemo.Opacity = 0;
+            // Set the background to fire!
+            this.Background = new ImageBrush(new BitmapImage(
+                new Uri(new Uri("C:/Users/Shwong/source/repos/TeemoHoverTest/TeemoHoverTest/Resources/firebg.jpg").AbsoluteUri)));
 
+            // Make Devil Teemo visible
+            Devil_Teemo.Fill = CreateDevilTeemoButton();
+            Devil_Teemo.Visibility = Visibility.Visible;
+            Devil_Teemo.Opacity = 1;
+
+            // Play Devil Teemo's expansion
             Storyboard sb1 = Resources["Teemo_Expand"] as Storyboard;
             sb1.Begin(Devil_Teemo);
 
@@ -731,101 +799,9 @@ namespace TeemoHoverTest
             PlayAudio(mediaPlayer1, "youhavebeenslain.mp3");
 
             #endregion
-
-            sb1.Completed += (s, e) =>
-            {
-                NewGame();
-            };
-
         }
 
 
-        /*
-        private void Key_ResetGame(object sender, KeyEventArgs e, Storyboard sb1)
-        {
-            //if (e.Key == Key.Space)
-            //    NewGame();
-            sb1.Stop(this);
-        }
-        */
-        /// <summary>
-        /// Handles the damaging of the player's health for every interval of the timer
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /*
-        private void TimerEventElapsed(object sender, EventArgs e)
-        {
-            // Tick the players health down every second for 3 seconds
-            this.Dispatcher.Invoke(() =>
-            {
-                health -= 130;
-                Console.WriteLine(health);
-                Console.WriteLine("Elapsed time in ms: " + stopwatch.Elapsed);
-                Health_Text.Content = health + " / 1550";
-                if (stopwatch.IsRunning && stopwatch.Elapsed < minInterval)
-                {
-                    myTimer.Stop();
-                    stopwatch.Reset();
-                }
-            });
-        }
-        */
-
-        private void TimerEventElapsed(object sender, EventArgs e)
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                //((System.Threading.Timer)sender).Enabled = false;
-                // Tick the players health down every second for 3 seconds
-                double newWidth;
-                health -= 260;
-                Health_Text.Content = health + " / 1550";
-
-                if (Health_Bar_Front.Width > 10)
-                    Health_Bar_Front.Width -= 91;
-
-                if (health < 0)
-                {
-                    gameEnded = true;
-                }
-
-
-                //Thickness margin = Health_Bar_Front.Margin;
-                //margin.Right = Health_Bar_Front.Margin.Right * 0.6;
-
-                //Health_Bar_Front.Margin = new Thickness(0, 0, , 0);
-
-
-                //Health_Bar_Front.Margin = margin;
-
-                //dispatcherTimer.IsEnabled = false;
-                //myTimer.Enabled = false;
-            });
-
-        }
-
-        /*
-        private void TimerEventElapsed(object sender, EventArgs e)
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                if (timeLeft > 0)
-                {
-                    timeLeft -= 1;
-                    health -= 390;
-                    Health_Text.Content = health + " / 1550";
-                    Console.WriteLine("health left: " + health);
-                }
-                else
-                {
-                    myTimer.Start();
-                    timeLeft = 1;
-                    Console.WriteLine("time left after reset: " + timeLeft);
-                }
-            });
-        }
-        */
     }
 
 }
