@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using System.IO;
 
+/// Ignore the name "TeemoHoverTest"...
 namespace TeemoHoverTest
 {
     /// <summary>
@@ -47,7 +48,8 @@ namespace TeemoHoverTest
         private readonly MediaPlayer mediaPlayer6 = new MediaPlayer();
         private readonly MediaPlayer mediaPlayer7 = new MediaPlayer();
         #endregion
-
+        
+        // Get current directory
         private string dir = ((Directory.GetCurrentDirectory()).Replace(@"\bin\Debug", @"\")).Replace(@"\", @"\\");
 
         #endregion
@@ -63,7 +65,7 @@ namespace TeemoHoverTest
             ImageBrush img = new ImageBrush();
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(new Uri(dir + "\\Images\\mushroom-transparent.png").AbsoluteUri);
+            bmp.UriSource = new Uri(new Uri(dir + "\\Images\\shroomtest.png").AbsoluteUri);
             bmp.EndInit();
             img.ImageSource = bmp;
             img.Opacity = 1;
